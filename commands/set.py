@@ -2,10 +2,10 @@ import discord
 from discord.ext import commands
 
 import data
-from helper import parse_time
+from helper import parse_time, get_object
 
 async def set_guild(guild_name: str):
-    guild = discord.utils.find(lambda g: g.name == guild_name or g.id == int(guild_name), data.bot.guilds)
+    guild = get_object(data.bot.guilds, guild_name)
     if guild:
         data.data["selected_guild"] = guild
         print(f"set selected guild to {guild}")
@@ -42,12 +42,12 @@ async def set_afk_channel(vc_name):
         await guild.edit(afk_channel = None)
         print("removed afk channel")
     else:
-        channel = discord.utils.find(lambda v: v.name == vc_name or v.id == int(vc_name), guild.voice_channels)
+        channel = get_object(guild.voice_channels, vc_name)
         if channel:
             await guild.edit(afk_channel = channel)
             print(f"changed afk channel to {vc_name}")
         else:
-            print(f"cannot find voice channel{vc_name}")
+            print(f"cannot find voice channel {vc_name}")
 
 async def set_afk_timeout(timeout: int):
     timeout_seconds = parse_time(timeout)

@@ -24,3 +24,11 @@ def parse_time(time: str):
         return time_number * 60 * 60
     else:
         return int(time)
+
+def get_object(objects, value):
+    for obj in objects:
+        try:
+            if obj.name == value or obj.id == int(value):
+                return obj
+        except:
+            pass
