@@ -4,62 +4,64 @@ import shlex
 import requests
 import shutil
 import traceback
-
+import sys
+import os
 
 from secrets import TOKEN
-from commands.set import set_guild_name, set_guild_icon
+from commands.set import set_guild, set_guild_name, set_guild_icon, set_afk_channel, set_afk_timeout
+from commands.get import get_guild, get_guilds, get_guild_name, get_guild_icon, get_afk_channel, get_afk_timeout
+from helper import save_image
+import data
+import constants
 
-bot = commands.Bot(command_prefix = "$")
-data = {
-    "selected_guild": None
-}
+data.bot = commands.Bot(command_prefix = "$")
 
-def get_image(image_url: str):
-    filename = "temp/image.png"
-    r = requests.get(image_url, stream = True)
-    r.raw.decode_content = True
-
-    with open(filename, "wb") as f:
-        shutil.copyfileobj(r.raw, f)
-
-    return filename
-
-@bot.event
+@data.bot.event
 async def on_ready():
     print("ready")
     while True:
         text = input("$ ")
         args = shlex.split(text, posix = True)
         try:
-            if args[0] == "set":
+            if args[0] == "help":
+                print(constants.commands)
+            elif args[0] == "set":
                 if args[1] == "guild":
-                    guild = discord.utils.find(lambda g: g.name == args[2] or g.id == int(args[2]), bot.guilds)
-                    if guild:
-                        data["selected_guild"] = guild
-                        print(f"selected guild changed to {guild}")
-                    else:
-                        print("could not find guild {}".format(args[2]))
+                    await set_guild(args[2])
                 elif args[1] == "guildname":
-                    await set_guild_name(data["selected_guild"], args[2])
+                    await set_guild_name(args[2])
                 elif args[1] == "guildicon":
                     guild_icon = get_image(args[2])
-                    await set_guild_icon(data["selected_guild"], guild_icon)
+                    await set_guild_icon(guild_icon)
+                elif args[1] == "afkchannel":
+                    await set_afk_channel(args[2])
+                elif args[1] == "afktimeout":
+                    await set_afk_timeout(args[2])
                 else:
                     print("{} is an invalid argument".format(args[1]))
             elif args[0] == "get":
                 if args[1] == "guild":
-                    guild = data["selected_guild"]
-                    print(f"selected guild is {guild}")
+                   await get_guild()
                 elif args[1] == "guilds":
-                    guilds = []
-                    for guild in bot.guilds:
-                        guilds.append(guild.name)
-                    print(guilds)
+                   await get_guilds()
+                elif args[1] == "guildname":
+                   await get_guild_name()
+                elif args[1] == "guildicon":
+                   await get_guild_icon()
+                elif args[1] == "afkchannel":
+                    await get_afk_channel()
+                elif args[1] == "afktimeout":
+                    await get_afk_timeout()
                 else:
                     print("{} is an invalid argument".format(args[1]))
+            elif args[0] == "exit":
+                sys.exit()
+            elif args[0] == "cls":
+                os.system("cls" if os.name == "nt" else "clear")
             else:
                 print("{} is an invalid argument".format(args[0]))
         except Exception:
             traceback.print_exc()
 
-bot.run(TOKEN)
+if __name__ == "__main__":
+    data.bot.run(TOKEN)
