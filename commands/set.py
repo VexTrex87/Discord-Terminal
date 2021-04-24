@@ -74,3 +74,18 @@ async def set_default_notifications(value):
         print("default notifications set to only mentions")
     else:
         print(f"{value} is not a valid notification level")
+
+async def set_role_name(role, new_name):
+    guild = data.data["selected_guild"]
+    if not guild:
+        print("no guild selected")
+        return
+
+    role = get_object(guild.roles, role)
+    if not role:
+        print(f"cannot find role {role}")
+        return
+
+    old_role_name = role.name
+    await role.edit(name = new_name)
+    print(f"set role {old_role_name}'s name to {new_name}")

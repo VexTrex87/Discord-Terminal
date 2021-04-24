@@ -68,3 +68,15 @@ async def get_default_notifications():
         print("all messages")
     else:
         print("only mentions")
+
+async def get_roles():
+    guild = data.data["selected_guild"]
+    if not guild:
+        print("no guild selected")
+        return
+
+    roles = []
+    for role in guild.roles:
+        roles.append(role.name)
+
+    print(roles)

@@ -7,9 +7,10 @@ import traceback
 import sys
 import os
 
-from secrets import TOKEN
 from commands.set import *
 from commands.get import *
+from commands.new import *
+from secrets import TOKEN
 from helper import save_image
 import data
 import constants
@@ -39,6 +40,8 @@ async def on_ready():
                     await set_afk_timeout(args[2])
                 elif args[1] == "defaultnotifications":
                     await set_default_notifications(args[2])
+                elif args[1] == "rolename":
+                    await set_role_name(args[2], args[3])
                 else:
                     print("{} is an invalid argument".format(args[1]))
             elif args[0] == "get":
@@ -56,6 +59,13 @@ async def on_ready():
                     await get_afk_timeout()
                 elif args[1] == "defaultnotifications":
                     await get_default_notifications()
+                elif args[1] == "roles":
+                    await get_roles()
+                else:
+                    print("{} is an invalid argument".format(args[1]))
+            elif args[0] == "new":
+                if args[1] == "role":
+                    await new_role(args[2])
                 else:
                     print("{} is an invalid argument".format(args[1]))
             elif args[0] == "exit":
