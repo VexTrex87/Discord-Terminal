@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from ast import literal_eval
 
 import data
 from helper import parse_time, get_object
@@ -60,7 +61,7 @@ async def set_afk_timeout(timeout: int):
     await guild.edit(afk_timeout = timeout_seconds)
     print(f"changed afk timeout to {timeout_seconds} seconds")
 
-async def set_default_notifications(value):
+async def set_notifications(value):
     guild = data.data["selected_guild"]
     if not guild:
         print("no guild selected")
@@ -89,3 +90,80 @@ async def set_role_name(role, new_name):
     old_role_name = role.name
     await role.edit(name = new_name)
     print(f"set role {old_role_name}'s name to {new_name}")
+
+async def set_role_permission(role, permission, value):
+    guild = data.data["selected_guild"]
+    if not guild:
+        print("no guild selected")
+        return
+
+    role = get_object(guild.roles, role)
+    if not role:
+        print(f"could not find role {role}")
+        return
+
+    if value == "true":
+        value = True
+    elif value == "false":
+        value = False
+    else:
+        print(f"{value} is not a valid value")
+        return
+
+    permissions = discord.Permissions()
+    permissions.update(**{permission: value})
+
+    await role.edit(permissions = permissions)
+    print(f"set permission {permission} to {value} for role {role}")
+
+async def set_role_color(role, color: int):
+    guild = data.data["selected_guild"]
+    if not guild:
+        print("no guild selected")
+        return
+
+    role = get_object(guild.roles, role)
+    if not role:
+        print(f"could not find role {role}")
+        return
+
+    color = int(color, 16)
+    await role.edit(color = discord.Color(color))
+    print(f"set role {role}'s color to {color}")
+
+async def set_role_mentionable(role, value):
+    guild = data.data["selected_guild"]
+    if not guild:
+        print("no guild selected")
+        return
+
+    role = get_object(guild.roles, role)
+    if not role:
+        print(f"could not find role {role}")
+        return
+
+    if value == "true":
+        value = True
+    elif value == "false":
+        value = False
+    else:
+        print(f"{value} is not a valid value")
+        return
+
+    await role.edit(mentionable = value)
+    print(f"set role {role}'s mentionable value to {value}")
+
+async def set_role_position(role, value):
+    guild = data.data["selected_guild"]
+    if not guild:
+        print("no guild selected")
+        return
+
+    role = get_object(guild.roles, role)
+    if not role:
+        print(f"could not find role {role}")
+        return
+
+    value = int(value)
+    await role.edit(position = value)
+    print(f"set role {role}'s position to {value}")

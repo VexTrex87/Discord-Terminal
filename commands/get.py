@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 import data
+from helper import get_object
 
 async def get_guild():
     selected_guild = data.data["selected_guild"]
@@ -58,7 +59,7 @@ async def get_afk_timeout():
     else:
         print("no afk timeout")
 
-async def get_default_notifications():
+async def get_notifications():
     guild = data.data["selected_guild"]
     if not guild:
         print("no guild selected")
@@ -80,3 +81,59 @@ async def get_roles():
         roles.append(role.name)
 
     print(roles)
+
+async def get_role_permissions(role):
+    guild = data.data["selected_guild"]
+    if not guild:
+        print("no guild selected")
+        return
+
+    role = get_object(guild.roles, role)
+    if not role:
+        print(f"could not find role {role}")
+        return
+
+    permissions = {}
+    for permission in role.permissions:
+        permissions[permission[0]] = permission[1]
+
+    print(permissions)
+
+async def get_role_color(role):
+    guild = data.data["selected_guild"]
+    if not guild:
+        print("no guild selected")
+        return
+
+    role = get_object(guild.roles, role)
+    if not role:
+        print(f"could not find role {role}")
+        return
+
+    print(role.color)
+
+async def get_role_mentionable(role):
+    guild = data.data["selected_guild"]
+    if not guild:
+        print("no guild selected")
+        return
+
+    role = get_object(guild.roles, role)
+    if not role:
+        print(f"could not find role {role}")
+        return
+
+    print(role.mentionable)
+
+async def get_role_position(role):
+    guild = data.data["selected_guild"]
+    if not guild:
+        print("no guild selected")
+        return
+
+    role = get_object(guild.roles, role)
+    if not role:
+        print(f"could not find role {role}")
+        return
+
+    print(role.position)

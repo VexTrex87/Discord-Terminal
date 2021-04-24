@@ -6,6 +6,7 @@ import shutil
 import traceback
 import sys
 import os
+import traceback
 
 from commands.set import *
 from commands.get import *
@@ -38,10 +39,18 @@ async def on_ready():
                     await set_afk_channel(args[2])
                 elif args[1] == "afktimeout":
                     await set_afk_timeout(args[2])
-                elif args[1] == "defaultnotifications":
-                    await set_default_notifications(args[2])
+                elif args[1] == "notifications":
+                    await set_notifications(args[2])
                 elif args[1] == "rolename":
                     await set_role_name(args[2], args[3])
+                elif args[1] == "rolepermission":
+                    await set_role_permission(args[2], args[3], args[4])
+                elif args[1] == "rolecolor":
+                    await set_role_color(args[2], args[3])
+                elif args[1] == "rolementionable":
+                    await set_role_mentionable(args[2], args[3])
+                elif args[1] == "roleposition":
+                    await set_role_position(args[2], args[3]) 
                 else:
                     print("{} is an invalid argument".format(args[1]))
             elif args[0] == "get":
@@ -57,10 +66,18 @@ async def on_ready():
                     await get_afk_channel()
                 elif args[1] == "afktimeout":
                     await get_afk_timeout()
-                elif args[1] == "defaultnotifications":
-                    await get_default_notifications()
+                elif args[1] == "set_notifications":
+                    await get_notifications()
                 elif args[1] == "roles":
                     await get_roles()
+                elif args[1] == "rolepermissions":
+                    await get_role_permissions(args[2])
+                elif args[1] == "rolecolor":
+                    await get_role_color(args[2])
+                elif args[1] == "rolementionable":
+                    await get_role_mentionable(args[2])
+                elif args[1] == "roleposition":
+                    await get_role_position(args[2]) 
                 else:
                     print("{} is an invalid argument".format(args[1]))
             elif args[0] == "new":
@@ -74,8 +91,8 @@ async def on_ready():
                 os.system("cls" if os.name == "nt" else "clear")
             else:
                 print("{} is an invalid argument".format(args[0]))
-        except Exception:
-            traceback.print_exc()
+        except Exception as error_message:
+            traceback.print_exception(type(error_message), error_message, error_message.__traceback__)
 
 if __name__ == "__main__":
     data.bot.run(TOKEN)
