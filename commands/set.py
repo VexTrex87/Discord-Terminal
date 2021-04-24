@@ -59,3 +59,18 @@ async def set_afk_timeout(timeout: int):
 
     await guild.edit(afk_timeout = timeout_seconds)
     print(f"changed afk timeout to {timeout_seconds} seconds")
+
+async def set_default_notifications(value):
+    guild = data.data["selected_guild"]
+    if not guild:
+        print("no guild selected")
+        return
+
+    if value == "allmessages":
+        await guild.edit(default_notifications = discord.NotificationLevel.all_messages)
+        print("default notifications set to all messages")
+    elif value == "onlymentions":
+        await guild.edit(default_notifications = discord.NotificationLevel.only_mentions)
+        print("default notifications set to only mentions")
+    else:
+        print(f"{value} is not a valid notification level")

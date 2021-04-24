@@ -57,3 +57,14 @@ async def get_afk_timeout():
         print(f"{afk_timeout} seconds")
     else:
         print("no afk timeout")
+
+async def get_default_notifications():
+    guild = data.data["selected_guild"]
+    if not guild:
+        print("no guild selected")
+        return
+
+    if guild.default_notifications == discord.NotificationLevel.all_messages:
+        print("all messages")
+    else:
+        print("only mentions")
